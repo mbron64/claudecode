@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.env
+.env.*
+
+# Personal, machine-local Claude Code notes / overrides
+CLAUDE.local.md
+.claude/settings.local.json
