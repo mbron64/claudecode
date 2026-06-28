@@ -67,10 +67,29 @@ Every run ends with a digest at the **top** of your final message:
 
 The `buildDigest()` helper in `src/digest.ts` is the canonical shape for this.
 
+## Working like Boris (the source this repo copies)
+
+From howborisusesclaudecode.com — keep it **vanilla**; the defaults are good.
+
+- **Verification is rule #1:** "Give Claude a way to verify its work — it 2–3×'s
+  the quality." That's why `npm run verify` anchors the whole loop.
+- **Plan first, then let it run:** iterate in plan mode until the plan is solid,
+  then switch to auto-accept and let it execute in one go.
+- **Opus + thinking** for every task — steering it less beats a faster small model.
+- **Permissions via allowlist, not bypass:** pre-approve safe commands with
+  `/permissions` (baked into `.claude/settings.json`) + auto-accept (Shift+Tab).
+  Do **not** rely on `--dangerously-skip-permissions`.
+- **Slash commands for inner-loop work** (`.claude/commands/`); use inline `!bash`
+  to pre-compute context (see `/commit-push-pr`) so commands run in one shot.
+- **Subagents** (`.claude/agents/`) automate the recurring bits: `code-reviewer`
+  for a second opinion, `code-simplifier` after green.
+- **Multi-claude:** sessions are cheap and parallel. Keep CLAUDE.md the shared
+  source of truth — when Claude gets something wrong, add a line here so it doesn't recur.
+
 ## Repo etiquette
 
 - Branch: develop on the assigned feature branch; never push to `main`.
-- Commit with clear messages; commit/push only when asked.
+- Commit with clear messages; commit/push only when asked (or via `/commit-push-pr`).
 - Don't add dependencies casually — prefer the standard library and what's here.
 
 ## Gotchas
