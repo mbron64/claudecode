@@ -25,16 +25,19 @@ npm run verify     # typecheck + lint + format check + tests  (the "is it green?
 
 ## What's in here
 
-| Path                             | Purpose                                                                              |
-| -------------------------------- | ------------------------------------------------------------------------------------ |
-| `CLAUDE.md`                      | The "production prompt": stack, loop, code style, digest rules                       |
-| `.claude/settings.json`          | Permissions allowlist (`acceptEdits`) + hooks                                        |
-| `.claude/hooks/session-start.sh` | SessionStart hook — installs deps so web/CI sessions can run                         |
-| `.claude/commands/*.md`          | Slash commands: `/plan` `/ship` `/test-loop` `/research` `/digest` `/commit-push-pr` |
-| `.claude/agents/*.md`            | Subagents: `code-reviewer` (second opinion), `code-simplifier` (after green)         |
-| `scripts/verify.sh`              | The verification gate, callable from hooks/CI                                        |
-| `src/digest.ts`                  | Sample module: builds the end-of-run digest (real branches → real tests)             |
-| `src/digest.test.ts`             | Vitest suite covering happy paths and every error branch                             |
+| Path                               | Purpose                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------ |
+| `CLAUDE.md`                        | The "production prompt": stack, loop, code style, digest rules                       |
+| `.claude/settings.json`            | Permissions allowlist (`acceptEdits`) + SessionStart/format/notify hooks             |
+| `.claude/hooks/session-start.sh`   | SessionStart hook — installs deps so web/CI sessions can run                         |
+| `.claude/commands/*.md`            | Slash commands: `/plan` `/ship` `/test-loop` `/research` `/digest` `/commit-push-pr` |
+| `.claude/agents/*.md`              | Subagents: `code-reviewer` (second opinion), `code-simplifier` (after green)         |
+| `scripts/verify.sh`                | The verification gate, callable from hooks/CI                                        |
+| `scripts/new-claude.sh`            | Spin up a parallel worktree + branch for multi-clauding (Boris's 5-checkouts)        |
+| `scripts/notify.sh`                | Best-effort desktop notification, driven by the Notification hook                    |
+| `.github/pull_request_template.md` | PR template the `/ship` loop fills in                                                |
+| `src/digest.ts`                    | Sample module: builds the end-of-run digest (real branches → real tests)             |
+| `src/digest.test.ts`               | Vitest suite covering happy paths and every error branch                             |
 
 ## Toolchain
 
@@ -65,6 +68,19 @@ defaults to `acceptEdits`, so the loop runs without prompts on the things it nee
   ```
 
 - Add more pre-approved commands with `/permissions` as you hit them.
+
+### Multi-clauding (parallel sessions)
+
+Boris runs ~5 Claudes at once, each in its own checkout so they don't collide,
+plus 5–10 web sessions — ~20–30 PRs/day. Spin up an isolated worktree per task:
+
+```bash
+scripts/new-claude.sh fix-validation   # -> ../claudecode-fix-validation on claude/fix-validation
+cd ../claudecode-fix-validation && claude
+```
+
+The Notification hook pings you (best-effort desktop notification) when any
+session needs input. `/ship` runs the whole loop to a PR; fan out and let them run.
 
 Personal, machine-local notes go in `CLAUDE.local.md` (gitignored).
 

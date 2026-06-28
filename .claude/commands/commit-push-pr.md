@@ -18,6 +18,8 @@ allowed-tools: Bash(git status), Bash(git diff *), Bash(git log *), Bash(git add
    subject line + a short body listing what changed and why).
 3. Commit, then push to the current feature branch with `git push -u origin HEAD`.
    Retry on transient network failures (2s, 4s, 8s, 16s backoff). Never push to `main`.
-4. Do **not** open a PR unless the user explicitly asked for one in: $ARGUMENTS
+4. **Open a PR** against the default branch (this is the Boris inner loop — it ends
+   in a PR). Use the GitHub MCP tools. Mirror `.github/pull_request_template.md` in
+   the body and fill it from the diff. Title = the commit subject. Extra instructions: $ARGUMENTS
 
-Report the commit hash and the pushed branch.
+Report the commit hash, the pushed branch, and the PR URL.

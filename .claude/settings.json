@@ -57,6 +57,16 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/notify.sh \"Claude needs your input\""
+          }
+        ]
+      }
     ]
   }
 }
