@@ -76,9 +76,12 @@ From howborisusesclaudecode.com — keep it **vanilla**; the defaults are good.
 - **Plan first, then let it run:** iterate in plan mode until the plan is solid,
   then switch to auto-accept and let it execute in one go.
 - **Opus + thinking** for every task — steering it less beats a faster small model.
-- **Permissions via allowlist, not bypass:** pre-approve safe commands with
-  `/permissions` (baked into `.claude/settings.json`) + auto-accept (Shift+Tab).
-  Do **not** rely on `--dangerously-skip-permissions`.
+- **Permissions:** Boris's own setup avoids bypass (allowlist + auto-accept). This
+  repo deliberately deviates: `.claude/settings.json` ships `defaultMode:
+bypassPermissions` so every session — including phone/web — is fully hands-off
+  without a per-machine local file. Tradeoff: anyone who opens this repo runs with
+  guardrails off, so keep it private. A pre-approved allowlist is also present as a
+  fallback if you dial the mode back to `acceptEdits`.
 - **Slash commands for inner-loop work** (`.claude/commands/`); use inline `!bash`
   to pre-compute context (see `/commit-push-pr`) so commands run in one shot.
 - **Subagents** (`.claude/agents/`) automate the recurring bits: `code-reviewer`

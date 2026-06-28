@@ -53,21 +53,18 @@ TypeScript (ESM, strict) · Vitest · ESLint (flat config) · Prettier · Node �
 
 ## Driving it autonomously (the Boris way)
 
-Boris's hands-off-ness comes from an **allowlist + auto-accept**, _not_ from
-disabling guardrails — he explicitly avoids `--dangerously-skip-permissions`.
-This repo's `.claude/settings.json` pre-approves the safe inner-loop commands and
-defaults to `acceptEdits`, so the loop runs without prompts on the things it needs.
+Boris's own setup avoids bypass (allowlist + auto-accept), but this repo is tuned
+for **fully hands-off sessions from any surface — including the phone.** The
+committed `.claude/settings.json` ships `defaultMode: bypassPermissions`, so every
+new session runs with zero prompts without needing a per-machine local file.
 
-- Interactive: start in **plan mode** (Shift+Tab twice), iterate on the plan, then
-  Shift+Tab to **auto-accept** and let it run.
-- Headless:
+> ⚠️ Tradeoff: committing bypass means anyone who opens this repo runs with
+> guardrails off. Keep the repo **private**. To dial it back, change `defaultMode`
+> to `acceptEdits` — the pre-approved command allowlist is still there as a fallback.
 
-  ```bash
-  claude -p "/ship Add input validation to <module> and cover the new branches" \
-    --permission-mode acceptEdits
-  ```
-
-- Add more pre-approved commands with `/permissions` as you hit them.
+- The setting applies to **new** sessions; an already-running session keeps its mode
+  (toggle live with Shift+Tab on desktop/CLI, or the mode control in the mobile app).
+- Headless: `claude -p "/ship <task>"` runs with no prompts.
 
 ### Multi-clauding (parallel sessions)
 
